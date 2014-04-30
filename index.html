@@ -28,11 +28,22 @@
     <script type="text/jsx">
       /** @jsx React.DOM **/
       var AddAssetForm = React.createClass({
+        getInitialState: function() {
+          return { symbol: '', shares: ''};
+        },
+
+        onChange: function() {
+          this.setState(
+              { symbol: this.refs.symbol.getDOMNode().value
+              , shares: this.refs.shares.getDOMNode().value
+          });
+        },
+        
         render: function() {
           return (
             <form onSubmit={this.handleSubmit}>
-              <input type="text" placeholder="Sybmol" />
-              <input type="text" placeholder="Shares" />
+              <input type="text" onChange={this.onChange} placeholder="Sybmol" ref="symbol" />
+              <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" />
             </form>
           );
         }
@@ -65,17 +76,21 @@
       });
 
       var PortfolioManager = React.createClass({
+        getInitialState: function() {
+          return { assets: SAMPLE_ASSETS };
+        },
+
         render: function() {
           return (
             <div>
               <AddAssetForm/>
-              <AssetList assets={this.props.assets} />
+              <AssetList assets={this.state.assets} />
             </div>
           );
         }
       });
 
-      var testAssets = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
+      var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
 
       var ASSET_CLASSES = { "SCHA": ["small","domestic"]
                          , "SCHX": ["large","domestic"]
@@ -87,7 +102,7 @@
                         , "SCHF": 31.90
                         };
 
-      React.renderComponent(<PortfolioManager assets={testAssets}/>, document.body);
+      React.renderComponent(<PortfolioManager/>, document.body);
 
     </script>
   </body>
