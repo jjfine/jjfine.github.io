@@ -115,6 +115,13 @@
 
       var formatDollars = function(x) { return "$" + x.toFixed(2); }
 
+      var getAssetInfo = function(symbol) {
+        var req = new XMLHttpRequest();
+        req.open("get",'http://query.yahooapis.com/v1/public/yql?q=select symbol, Bid, Ask from yahoo.finance.quotes where symbol in ("' + symbol + '")%0A%09%09&env=http://datatables.org/alltables.env&format=json');
+        req.send();
+      }
+
+      getAssetInfo("SCHA");
       var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
 
       var ASSET_CLASSES = { "SCHA": ["small","domestic"]
