@@ -38,13 +38,37 @@
         }
       });
 
+      var SharesInput = React.createClass({
+        getInitialState: function() {
+          this.refs.shares = this.props.initialShares;
+          return { shares: this.props.initialShares};
+        },
+
+        onChange: function() {
+          newShares = this.refs.shares.getDOMNode().value;
+          this.setState({ shares: newShares });
+          this.props.changeShares(newShares);
+        },
+
+        render: function() {
+          return (
+          <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" value={this.state.shares} />
+          );
+        }
+      });
+
       var AssetRow = React.createClass({
+        changeShares:function(shares) {
+          this.props.changeAssetShares(this.props.asset.symbol, shares);
+        },
+
         render: function() {
           return (
             <tr>
               <td>{this.props.asset.symbol}</td>
-              <td>{this.props.asset.shares}</td>
-              <td>{ASSET_PRICES[this.props.asset.symbol]}</td>
+              <td><SharesInput changeShares={this.changeShares} initialShares={this.props.asset.shares} /></td>
+              <td>{formatDollars(ASSET_PRICES[this.props.asset.symbol])}</td>
+              <td>{formatDollars(ASSET_PRICES[this.props.asset.symbol]*this.props.asset.shares)}</td>
             </tr>
           );
         }
@@ -54,8 +78,8 @@
         render: function() {
           var rows = [];
           this.props.assets.forEach(function(asset) {
-            rows.push(<AssetRow asset={asset} key={asset.symbol}/>);
-          });
+            rows.push(<AssetRow asset={asset} key={asset.symbol} changeAssetShares={this.props.changeAssetShares} />);
+          }.bind(this));
           return (
             <table>
               {rows}
@@ -74,15 +98,22 @@
           this.setState({assets: newAssets});
         },
 
+        changeAssetShares: function(symbol, shares) {
+          this.state.assets.forEach(function(el) { if (el["symbol"] === symbol) el["shares"] = shares; })
+          this.setState({assets: this.state.assets});
+        },
+
         render: function() {
           return (
             <div>
               <AddAssetForm addAsset={this.addAsset} />
-              <AssetList assets={this.state.assets} />
+              <AssetList assets={this.state.assets} changeAssetShares={this.changeAssetShares} />
             </div>
           );
         }
       });
+
+      var formatDollars = function(x) { return "$" + x.toFixed(2); }
 
       var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
 
