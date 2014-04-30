@@ -59,7 +59,7 @@
 
       var AssetRow = React.createClass({
         changeShares:function(shares) {
-          this.props.changeAssetShares(this.props.asset.symbol, shares);
+          this.props.changeSharesByIndex(this.props.key, shares);
         },
 
         render: function() {
@@ -77,8 +77,8 @@
       var AssetList = React.createClass({
         render: function() {
           var rows = [];
-          this.props.assets.forEach(function(asset) {
-            rows.push(<AssetRow asset={asset} key={asset.symbol} changeAssetShares={this.props.changeAssetShares} />);
+          this.props.assets.forEach(function(asset, index) {
+            rows.push(<AssetRow asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} />);
           }.bind(this));
           return (
             <table>
@@ -98,8 +98,8 @@
           this.setState({assets: newAssets});
         },
 
-        changeAssetShares: function(symbol, shares) {
-          this.state.assets.forEach(function(el) { if (el["symbol"] === symbol) el["shares"] = shares; })
+        changeSharesByIndex: function(index, shares) {
+          this.state.assets[index].shares = shares; 
           this.setState({assets: this.state.assets});
         },
 
@@ -107,7 +107,7 @@
           return (
             <div>
               <AddAssetForm addAsset={this.addAsset} />
-              <AssetList assets={this.state.assets} changeAssetShares={this.changeAssetShares} />
+              <AssetList assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} />
             </div>
           );
         }
