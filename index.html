@@ -1,1 +1,96 @@
-<h1>Hello World</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
+    <title>Basic Example</title>
+    <link rel="stylesheet" href="base.css" />
+  </head>
+  <body>
+    <h1>Basic Example</h1>
+    <div id="container">
+      <p>
+        To install React, follow the instructions on
+        <a href="http://www.github.com/facebook/react/">GitHub</a>.
+      </p>
+      <p>
+        If you can see this, React is not working right.
+        If you checked out the source from GitHub make sure to run <code>grunt</code>.
+      </p>
+    </div>
+    <h4>Example Details</h4>
+    <p>This is written in vanilla JavaScript (without JSX) and transformed in the browser.<p>
+    <p>
+      Learn more about React at
+      <a href="http://facebook.github.io/react" target="_blank">facebook.github.io/react</a>.
+    </p>
+    <script src="lib/react-with-addons.js"></script>
+    <script src="lib/JSXTransformer.js"></script>
+    <script type="text/jsx">
+      /** @jsx React.DOM **/
+      var AddAssetForm = React.createClass({
+        render: function() {
+          return (
+            <form onSubmit={this.handleSubmit}>
+              <input type="text" placeholder="Sybmol" />
+              <input type="text" placeholder="Shares" />
+            </form>
+          );
+        }
+      });
+
+      var AssetRow = React.createClass({
+        render: function() {
+          return (
+            <tr>
+              <td>{this.props.asset.symbol}</td>
+              <td>{this.props.asset.shares}</td>
+            </tr>
+          );
+        }
+      });
+
+      var AssetList = React.createClass({
+        render: function() {
+          var rows = [];
+          this.props.assets.forEach(function(asset) {
+            rows.push(<AssetRow asset={asset} key={asset.symbol}/>);
+          });
+          return (
+            <table>
+              {rows}
+            </table>
+          );
+        }
+      });
+
+      var PortfolioManager = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <AddAssetForm/>
+              <AssetList assets={this.props.assets} />
+            </div>
+          );
+        }
+      });
+
+      var testAssets = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
+
+      var assetClasses = { "SCHA": ["small","domestic"]
+                         , "SCHX": ["large","domestic"]
+                         , "SCHF": ["large","foreign"]
+                         };
+
+      var assetPrices = { "SCHA": 51.76
+                        , "SCHX": 44.83
+                        , "SCHF": 31.90
+                        };
+
+      console.debug(assetPrices["SCHA"]);
+      console.debug(assetClasses["SCHA"]);
+
+      React.renderComponent(<PortfolioManager assets={testAssets}/>, document.body);
+
+    </script>
+  </body>
+</html>
