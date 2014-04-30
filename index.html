@@ -2,27 +2,10 @@
 <html>
   <head>
     <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
-    <title>Basic Example</title>
+    <title>Portfolio Manager</title>
     <link rel="stylesheet" href="base.css" />
   </head>
   <body>
-    <h1>Basic Example</h1>
-    <div id="container">
-      <p>
-        To install React, follow the instructions on
-        <a href="http://www.github.com/facebook/react/">GitHub</a>.
-      </p>
-      <p>
-        If you can see this, React is not working right.
-        If you checked out the source from GitHub make sure to run <code>grunt</code>.
-      </p>
-    </div>
-    <h4>Example Details</h4>
-    <p>This is written in vanilla JavaScript (without JSX) and transformed in the browser.<p>
-    <p>
-      Learn more about React at
-      <a href="http://facebook.github.io/react" target="_blank">facebook.github.io/react</a>.
-    </p>
     <script src="lib/react-with-addons.js"></script>
     <script src="lib/JSXTransformer.js"></script>
     <script type="text/jsx">
@@ -38,12 +21,18 @@
               , shares: this.refs.shares.getDOMNode().value
           });
         },
+
+        handleSubmit: function(e) {
+          e.preventDefault();
+          this.props.addAsset(this.state.symbol,this.state.shares);
+        },
         
         render: function() {
           return (
             <form onSubmit={this.handleSubmit}>
               <input type="text" onChange={this.onChange} placeholder="Sybmol" ref="symbol" />
               <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" />
+              <button>Add</button>
             </form>
           );
         }
@@ -80,10 +69,15 @@
           return { assets: SAMPLE_ASSETS };
         },
 
+        addAsset: function(symbol, shares) {
+          var newAssets = this.state.assets.concat({symbol: symbol, shares: shares});
+          this.setState({assets: newAssets});
+        },
+
         render: function() {
           return (
             <div>
-              <AddAssetForm/>
+              <AddAssetForm addAsset={this.addAsset} />
               <AssetList assets={this.state.assets} />
             </div>
           );
@@ -95,11 +89,13 @@
       var ASSET_CLASSES = { "SCHA": ["small","domestic"]
                          , "SCHX": ["large","domestic"]
                          , "SCHF": ["large","foreign"]
+                         , "SCHO": ["bond","domestic"]
                          };
 
       var ASSET_PRICES = { "SCHA": 51.76
                         , "SCHX": 44.83
                         , "SCHF": 31.90
+                        , "SCHO": 50.56
                         };
 
       React.renderComponent(<PortfolioManager/>, document.body);
