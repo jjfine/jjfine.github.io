@@ -44,6 +44,7 @@
             <tr>
               <td>{this.props.asset.symbol}</td>
               <td>{this.props.asset.shares}</td>
+              <td>{ASSET_PRICES[this.props.asset.symbol]}</td>
             </tr>
           );
         }
@@ -76,18 +77,15 @@
 
       var testAssets = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
 
-      var assetClasses = { "SCHA": ["small","domestic"]
+      var ASSET_CLASSES = { "SCHA": ["small","domestic"]
                          , "SCHX": ["large","domestic"]
                          , "SCHF": ["large","foreign"]
                          };
 
-      var assetPrices = { "SCHA": 51.76
+      var ASSET_PRICES = { "SCHA": 51.76
                         , "SCHX": 44.83
                         , "SCHF": 31.90
                         };
-
-      console.debug(assetPrices["SCHA"]);
-      console.debug(assetClasses["SCHA"]);
 
       React.renderComponent(<PortfolioManager assets={testAssets}/>, document.body);
 
