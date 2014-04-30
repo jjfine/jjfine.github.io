@@ -50,7 +50,7 @@ var HOME_INSTANCE = <Home />
 var PORTFOLIO_INSTANCE = <PortfolioManager />
 var initialTab = HOME_INSTANCE;
 
-if (window.location.hash === '#portfolio_manager')
+if (window.location.href.search('portfolio_manager') != -1)
 {
   initialTab = PORTFOLIO_INSTANCE;
 } 
