@@ -50,8 +50,8 @@ var AssetRow = React.createClass({
       <tr>
         <td>{this.props.asset.symbol}</td>
         <td><SharesInput changeShares={this.changeShares} shares={this.props.asset.shares} /></td>
-        <td>{formatDollars(MarketAPI.getPrice([this.props.asset.symbol]))}</td>
-        <td>{formatDollars(MarketAPI.getPrice([this.props.asset.symbol])*this.props.asset.shares)}</td>
+        <td>{formatDollars(this.props.price)}</td>
+        <td>{formatDollars(this.props.price*this.props.asset.shares)}</td>
       </tr>
     );
   }
@@ -61,7 +61,7 @@ var AssetList = React.createClass({
   render: function() {
     var rows = [];
     this.props.assets.forEach(function(asset, index) {
-      rows.push(<AssetRow asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} />);
+      rows.push(<AssetRow price={this.props.getPrice(asset.symbol)} asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} />);
     }.bind(this));
     return (
       <table>
@@ -73,7 +73,10 @@ var AssetList = React.createClass({
 
 var PortfolioManager = React.createClass({
   getInitialState: function() {
-    return { assets: SAMPLE_ASSETS };
+    return { 
+      assets: SAMPLE_ASSETS,
+      prices: ASSET_PRICES
+    };
   },
 
   addAsset: function(symbol, shares) {
@@ -96,11 +99,29 @@ var PortfolioManager = React.createClass({
     this.setState({assets: newAssets});
   },
 
+  getPrice: function(symbol) {
+    price = this.state.prices[symbol];
+    if (price == undefined) {
+      this.updatePrice(symbol);
+      price = 0.0;
+    }
+    return price;
+  },
+
+  updatePrice: function(symbol) {
+    var portfolio = this;
+    MarketAPI.getAssetInfo(symbol, function() {
+      var price = parseFloat(JSON.parse(this.response).query.results.quote.Bid);
+      portfolio.state.prices[symbol] = price;
+      portfolio.setState({prices: portfolio.state.prices});
+    });
+  },
+
   render: function() {
     return (
       <div>
         <AddAssetForm addAsset={this.addAsset} />
-        <AssetList assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} />
+        <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} />
         <button onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
         <button onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
       </div>
@@ -110,19 +131,15 @@ var PortfolioManager = React.createClass({
 
 var formatDollars = function(x) { return "$" + x.toFixed(2); }
 
-var getAssetInfo = function(symbol) {
-  var req = new XMLHttpRequest();
-  req.open("get",'http://query.yahooapis.com/v1/public/yql?q=select symbol, Bid, Ask from yahoo.finance.quotes where symbol in ("' + symbol + '")%0A%09%09&env=http://datatables.org/alltables.env&format=json');
-  req.send();
-}
-
-MarketAPI = {
-  getPrice: function(symbol) {
-    price = ASSET_PRICES[symbol];
-    if (price == undefined) price = 0.0;
-    return price;
+var MarketAPI = {
+  getAssetInfo: function(symbol,onload) {
+    var req = new XMLHttpRequest();
+    req.onload = onload;
+    req.open("get",'http://query.yahooapis.com/v1/public/yql?q=select symbol, Bid, Ask from yahoo.finance.quotes where symbol in ("' + symbol + '")%0A%09%09&env=http://datatables.org/alltables.env&format=json');
+    req.send();
   }
-}
+
+};
 
 
 // getAssetInfo("SCHA");
