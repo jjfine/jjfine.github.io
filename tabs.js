@@ -7,35 +7,28 @@ var Home = React.createClass({
   }
 });
 
-var HomeTab = React.createClass({
+var HomeTab = {
   name: "Home",
   path: "home",
-  render: function() {
-    return <Home />
-  }
-});
+  component: <Home />
+};
 
-var PortfolioTab = React.createClass({
+var PortfolioTab = {
   name: "Portfolio",
   path: "portfolio",
-  render: function() {
-    return <PortfolioManager />
-  }
-});
+  component: <PortfolioManager />
+};
 
 var Tabs = React.createClass({
-  homeTab: new HomeTab(),
-  portfolioTab: new PortfolioTab(),
-
   getInitialState: function() {
     return { selectedTab: this.nameToTab(this.props.initialTabName) };
   },
 
   nameToTab: function(tabName) {
     if (tabName == "home") {
-      return this.homeTab;
+      return HomeTab;
     } else {
-      return this.portfolioTab;
+      return PortfolioTab;
     }
   },
 
@@ -58,7 +51,7 @@ var Tabs = React.createClass({
           <span onClick={this.onClick("portfolio")}>Portfolio Manager App</span>
         </div>
         <hr />
-        {selectedTab}
+        {selectedTab.component}
       </div>
       );
   }
@@ -73,3 +66,4 @@ if (window.location.href.search('portfolio') != -1)
 } 
   
 React.renderComponent(<Tabs initialTabName={initialTabName} />, document.body);
+
