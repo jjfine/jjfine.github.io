@@ -28,20 +28,14 @@ var AddAssetForm = React.createClass({
 });
 
 var SharesInput = React.createClass({
-  getInitialState: function() {
-    this.refs.shares = this.props.initialShares;
-    return { shares: this.props.initialShares};
-  },
-
   onChange: function() {
     newShares = this.refs.shares.getDOMNode().value;
-    this.setState({ shares: newShares });
     this.props.changeShares(newShares);
   },
 
   render: function() {
     return (
-    <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" value={this.state.shares} />
+      <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" value={this.props.shares} />
     );
   }
 });
@@ -55,7 +49,7 @@ var AssetRow = React.createClass({
     return (
       <tr>
         <td>{this.props.asset.symbol}</td>
-        <td><SharesInput changeShares={this.changeShares} initialShares={this.props.asset.shares} /></td>
+        <td><SharesInput changeShares={this.changeShares} shares={this.props.asset.shares} /></td>
         <td>{formatDollars(ASSET_PRICES[this.props.asset.symbol])}</td>
         <td>{formatDollars(ASSET_PRICES[this.props.asset.symbol]*this.props.asset.shares)}</td>
       </tr>
@@ -92,11 +86,23 @@ var PortfolioManager = React.createClass({
     this.setState({assets: this.state.assets});
   },
 
+  saveAssetsToLocalStorage: function() {
+    localStorage['assets'] = JSON.stringify(this.state.assets);
+  },
+
+  loadAssetsFromLocalStorage: function() {
+    var newAssets = JSON.parse(localStorage['assets']);
+    if (!newAssets) newAssets = [];
+    this.setState({assets: newAssets});
+  },
+
   render: function() {
     return (
       <div>
         <AddAssetForm addAsset={this.addAsset} />
         <AssetList assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} />
+        <button onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
+        <button onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
       </div>
     );
   }
@@ -110,7 +116,7 @@ var getAssetInfo = function(symbol) {
   req.send();
 }
 
-getAssetInfo("SCHA");
+// getAssetInfo("SCHA");
 var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
 
 var ASSET_CLASSES = { "SCHA": ["small","domestic"]
