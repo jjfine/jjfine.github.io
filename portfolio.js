@@ -50,8 +50,8 @@ var AssetRow = React.createClass({
       <tr>
         <td>{this.props.asset.symbol}</td>
         <td><SharesInput changeShares={this.changeShares} shares={this.props.asset.shares} /></td>
-        <td>{formatDollars(ASSET_PRICES[this.props.asset.symbol])}</td>
-        <td>{formatDollars(ASSET_PRICES[this.props.asset.symbol]*this.props.asset.shares)}</td>
+        <td>{formatDollars(MarketAPI.getPrice([this.props.asset.symbol]))}</td>
+        <td>{formatDollars(MarketAPI.getPrice([this.props.asset.symbol])*this.props.asset.shares)}</td>
       </tr>
     );
   }
@@ -115,6 +115,15 @@ var getAssetInfo = function(symbol) {
   req.open("get",'http://query.yahooapis.com/v1/public/yql?q=select symbol, Bid, Ask from yahoo.finance.quotes where symbol in ("' + symbol + '")%0A%09%09&env=http://datatables.org/alltables.env&format=json');
   req.send();
 }
+
+MarketAPI = {
+  getPrice: function(symbol) {
+    price = ASSET_PRICES[symbol];
+    if (price == undefined) price = 0.0;
+    return price;
+  }
+}
+
 
 // getAssetInfo("SCHA");
 var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
