@@ -7,9 +7,25 @@ var Home = React.createClass({
   }
 });
 
+var HomeTab = React.createClass({
+  name: "Home",
+  path: "home",
+  render: function() {
+    return <Home />
+  }
+});
+
+var PortfolioTab = React.createClass({
+  name: "Portfolio",
+  path: "portfolio",
+  render: function() {
+    return <PortfolioManager />
+  }
+});
+
 var Tabs = React.createClass({
-  HOME_INSTANCE: <Home />,
-  PORTFOLIO_INSTANCE: <PortfolioManager />,
+  homeTab: new HomeTab(),
+  portfolioTab: new PortfolioTab(),
 
   getInitialState: function() {
     return { selectedTab: this.nameToTab(this.props.initialTabName) };
@@ -17,20 +33,15 @@ var Tabs = React.createClass({
 
   nameToTab: function(tabName) {
     if (tabName == "home") {
-      return this.HOME_INSTANCE;
+      return this.homeTab;
     } else {
-      return this.PORTFOLIO_INSTANCE;
+      return this.portfolioTab;
     }
   },
 
   switchTo: function(tabName) {
     var newTab = this.nameToTab(tabName);
-    if (tabName == "home") {
-      window.history.pushState("something", "Home", '/')
-    } else {
-      window.history.pushState("something portf", "Portfolio Manager", '/portfolio_manager')
-    }
-    
+    window.history.pushState("", newTab.name, newTab.path)
     this.setState({selectedTab: newTab});
   },
 
@@ -56,7 +67,7 @@ var Tabs = React.createClass({
 var path = window.location.pathname;
 var initialTabName = "home"
 
-if (window.location.href.search('portfolio_manager') != -1)
+if (window.location.href.search('portfolio') != -1)
 {
   initialTabName = "portfolio"
 } 
