@@ -8,26 +8,34 @@ var Home = React.createClass({
 });
 
 var Tabs = React.createClass({
+  HOME_INSTANCE: <Home />,
+  PORTFOLIO_INSTANCE: <PortfolioManager />,
+
   getInitialState: function() {
-    return { selectedTab: this.props.initialTab };
+    return { selectedTab: this.nameToTab(this.props.initialTabName) };
+  },
+
+  nameToTab: function(tabName) {
+    if (tabName == "home") {
+      return this.HOME_INSTANCE;
+    } else {
+      return this.PORTFOLIO_INSTANCE;
+    }
+  },
+
+  switchTo: function(tabName) {
+    var newTab = this.nameToTab(tabName);
+    if (tabName == "home") {
+      window.history.pushState("something", "Home", '/')
+    } else {
+      window.history.pushState("something portf", "Portfolio Manager", '/portfolio_manager')
+    }
+    
+    this.setState({selectedTab: newTab});
   },
 
   onClick: function(tabName) {
-    return function(e) {
-      console.log(tabName);
-      console.log(this.state);
-      if (tabName == "Home") {
-        console.log("switching to home");
-        selectedTab = HOME_INSTANCE;
-        window.history.pushState("something", "Home", '/')
-      } else {
-        console.log("switching to portfolio_manager");
-        selectedTab = PORTFOLIO_INSTANCE;
-        window.history.pushState("something portf", "Portfolio Manager", '/portfolio_manager')
-      }
-      
-      this.setState({selectedTab: selectedTab});
-    }.bind(this);
+    return function() { this.switchTo(tabName) }.bind(this);
   },
 
   render: function() {
@@ -35,8 +43,8 @@ var Tabs = React.createClass({
     return (
       <div>
         <div>
-          <span onClick={this.onClick("Home")}>Home</span>
-          <span onClick={this.onClick("Portfolio")}>Portfolio Manager App</span>
+          <span onClick={this.onClick("home")}>Home</span>
+          <span onClick={this.onClick("portfolio")}>Portfolio Manager App</span>
         </div>
         <hr />
         {selectedTab}
@@ -46,13 +54,11 @@ var Tabs = React.createClass({
 });
 
 var path = window.location.pathname;
-var HOME_INSTANCE = <Home />
-var PORTFOLIO_INSTANCE = <PortfolioManager />
-var initialTab = HOME_INSTANCE;
+var initialTabName = "home"
 
 if (window.location.href.search('portfolio_manager') != -1)
 {
-  initialTab = PORTFOLIO_INSTANCE;
+  initialTabName = "portfolio"
 } 
   
-React.renderComponent(<Tabs initialTab={initialTab} />, document.body);
+React.renderComponent(<Tabs initialTabName={initialTabName} />, document.body);
