@@ -75,7 +75,7 @@ var PortfolioManager = React.createClass({
   getInitialState: function() {
     return { 
       assets: SAMPLE_ASSETS,
-      prices: ASSET_PRICES
+      prices: {}
     };
   },
 
@@ -129,7 +129,9 @@ var PortfolioManager = React.createClass({
   }
 });
 
-var formatDollars = function(x) { return "$" + x.toFixed(2); }
+var formatDollars = function(x) { 
+  return "$" + x.toFixed(2); 
+}
 
 var MarketAPI = {
   getAssetInfo: function(symbol,onload) {
@@ -141,8 +143,6 @@ var MarketAPI = {
 
 };
 
-
-// getAssetInfo("SCHA");
 var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
 
 var ASSET_CLASSES = { "SCHA": ["small","domestic"]
@@ -150,11 +150,4 @@ var ASSET_CLASSES = { "SCHA": ["small","domestic"]
                    , "SCHF": ["large","foreign"]
                    , "SCHO": ["bond","domestic"]
                    };
-
-var ASSET_PRICES = { "SCHA": 51.76
-                  , "SCHX": 44.83
-                  , "SCHF": 31.90
-                  , "SCHO": 50.56
-                  };
-
 
