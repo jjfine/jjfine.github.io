@@ -45,11 +45,11 @@ var Tabs = React.createClass({
   render: function() {
     var selectedTab = this.state.selectedTab;
     return (
-      <div>
-        <div>
-          <span onClick={this.onClick("home")}>Home</span>
-          <span onClick={this.onClick("portfolio")}>Portfolio Manager App</span>
-        </div>
+      <div className="container">
+        <ul className="list-inline">
+          <li onClick={this.onClick("home")}><h2><a>Home</a></h2></li>
+          <li onClick={this.onClick("portfolio")}><h2><a>Portfolio Manager App</a></h2></li>
+        </ul>
         <hr />
         {selectedTab.component}
       </div>

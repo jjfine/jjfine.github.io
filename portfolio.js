@@ -18,10 +18,18 @@ var AddAssetForm = React.createClass({
   
   render: function() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" onChange={this.onChange} placeholder="Sybmol" ref="symbol" />
-        <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" />
-        <button>Add</button>
+      <form onSubmit={this.handleSubmit} className="form">
+        <div className="form-group row">
+          <div className="col-xs-3">
+            <input type="text" onChange={this.onChange} placeholder="Sybmol" ref="symbol" className="form-control" />
+          </div>
+          <div className="col-xs-3">
+            <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" className="form-control" />
+          </div>
+          <div className="col-xs-2">
+            <button className="btn btn-default">Add</button>
+          </div>
+        </div>
       </form>
     );
   }
@@ -35,7 +43,7 @@ var SharesInput = React.createClass({
 
   render: function() {
     return (
-      <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" value={this.props.shares} />
+      <input type="text" onChange={this.onChange} placeholder="Shares" ref="shares" value={this.props.shares} className="form-control shares-input"/>
     );
   }
 });
@@ -64,8 +72,10 @@ var AssetList = React.createClass({
       rows.push(<AssetRow price={this.props.getPrice(asset.symbol)} asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} />);
     }.bind(this));
     return (
-      <table>
-        {rows}
+      <table className="table">
+        <tbody>
+          {rows}
+        </tbody>
       </table>
     );
   }
@@ -126,11 +136,13 @@ var PortfolioManager = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <AddAssetForm addAsset={this.addAsset} />
-        <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} />
-        <button onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
-        <button onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
+      <div className="row">
+        <div className="col-md-6">
+          <AddAssetForm addAsset={this.addAsset} />
+          <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} />
+          <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
+          <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
+        </div>
       </div>
     );
   }
