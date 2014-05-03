@@ -48,9 +48,32 @@ var SharesInput = React.createClass({
   }
 });
 
+var AssetClassSelect = React.createClass({
+  onChange: function() {
+    newClass = this.refs.assetClass.getDOMNode().value;
+    console.log(newClass);
+    this.props.changeClass(newClass);
+  },
+
+  render: function() {
+    return (
+      <select onChange={this.onChange} ref="assetClass" value={this.props.assetClass} className="form-control" >
+        <option>US Small</option>
+        <option>US Large</option>
+        <option>International Small</option>
+        <option>International Large</option>
+      </select>
+    );
+  }
+});
+
 var AssetRow = React.createClass({
   changeShares:function(shares) {
     this.props.changeSharesByIndex(this.props.key, shares);
+  },
+
+  changeClass:function(assetClass) {
+    this.props.changeClassByIndex(this.props.key, assetClass);
   },
 
   deleteRow: function() {
@@ -64,6 +87,7 @@ var AssetRow = React.createClass({
         <td><SharesInput changeShares={this.changeShares} shares={this.props.asset.shares} /></td>
         <td>{formatDollars(this.props.price)}</td>
         <td>{formatDollars(this.props.price*this.props.asset.shares)}</td>
+        <td><AssetClassSelect changeClass={this.changeClass} assetClass={this.props.asset.assetClass} /></td>
         <td><a href="javascript:void(0);" onClick={this.deleteRow}>Delete</a></td>
       </tr>
     );
@@ -74,7 +98,7 @@ var AssetList = React.createClass({
   render: function() {
     var rows = [];
     this.props.assets.forEach(function(asset, index) {
-      rows.push(<AssetRow price={this.props.getPrice(asset.symbol)} asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} deleteAsset={this.props.deleteAsset} />);
+      rows.push(<AssetRow price={this.props.getPrice(asset.symbol)} asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} changeClassByIndex={this.props.changeClassByIndex} deleteAsset={this.props.deleteAsset} />);
     }.bind(this));
     return (
       <table className="table">
@@ -110,6 +134,11 @@ var PortfolioManager = React.createClass({
 
   changeSharesByIndex: function(index, shares) {
     this.state.assets[index].shares = shares; 
+    this.setState({assets: this.state.assets});
+  },
+
+  changeClassByIndex: function(index, assetClass) {
+    this.state.assets[index].assetClass = assetClass; 
     this.setState({assets: this.state.assets});
   },
 
@@ -149,7 +178,7 @@ var PortfolioManager = React.createClass({
       <div className="row">
         <div className="col-md-6">
           <AddAssetForm addAsset={this.addAsset} />
-          <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset}/>
+          <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
           <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
           <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
         </div>
