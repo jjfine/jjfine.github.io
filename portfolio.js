@@ -53,6 +53,10 @@ var AssetRow = React.createClass({
     this.props.changeSharesByIndex(this.props.key, shares);
   },
 
+  deleteRow: function() {
+    this.props.deleteAsset(this.props.key);
+  },
+
   render: function() {
     return (
       <tr>
@@ -60,6 +64,7 @@ var AssetRow = React.createClass({
         <td><SharesInput changeShares={this.changeShares} shares={this.props.asset.shares} /></td>
         <td>{formatDollars(this.props.price)}</td>
         <td>{formatDollars(this.props.price*this.props.asset.shares)}</td>
+        <td><a href="javascript:void(0);" onClick={this.deleteRow}>Delete</a></td>
       </tr>
     );
   }
@@ -69,7 +74,7 @@ var AssetList = React.createClass({
   render: function() {
     var rows = [];
     this.props.assets.forEach(function(asset, index) {
-      rows.push(<AssetRow price={this.props.getPrice(asset.symbol)} asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} />);
+      rows.push(<AssetRow price={this.props.getPrice(asset.symbol)} asset={asset} key={index} changeSharesByIndex={this.props.changeSharesByIndex} deleteAsset={this.props.deleteAsset} />);
     }.bind(this));
     return (
       <table className="table">
@@ -96,6 +101,11 @@ var PortfolioManager = React.createClass({
   addAsset: function(symbol, shares) {
     var newAssets = this.state.assets.concat({symbol: symbol, shares: shares});
     this.setState({assets: newAssets});
+  },
+
+  deleteAsset: function(index) {
+    this.state.assets.splice(index, 1);
+    this.setState({assets: this.state.assets});
   },
 
   changeSharesByIndex: function(index, shares) {
@@ -139,7 +149,7 @@ var PortfolioManager = React.createClass({
       <div className="row">
         <div className="col-md-6">
           <AddAssetForm addAsset={this.addAsset} />
-          <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} />
+          <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset}/>
           <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
           <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
         </div>
