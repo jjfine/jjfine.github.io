@@ -124,6 +124,7 @@ var AssetPieChart = React.createClass({
     var g = this.svg.selectAll("path").data(this.pie(nonzeroAssets));
     g.enter().append("path")
       .style("fill", function() { return this.color(Math.random()*10) }.bind(this));
+    g.exit().remove();
     g.attr("d",this.arc);
   },
 
