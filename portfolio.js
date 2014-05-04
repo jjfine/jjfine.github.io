@@ -51,7 +51,6 @@ var SharesInput = React.createClass({
 var AssetClassSelect = React.createClass({
   onChange: function() {
     newClass = this.refs.assetClass.getDOMNode().value;
-    console.log(newClass);
     this.props.changeClass(newClass);
   },
 
@@ -107,6 +106,64 @@ var AssetList = React.createClass({
         </tbody>
       </table>
     );
+  }
+});
+
+var AssetPieChart = React.createClass({
+  componentDidUpdate: function() {
+    this.pie.value(function(d) { 
+        return this.props.getPrice(d.symbol)*d.shares;
+    }.bind(this));
+
+    var nonzeroAssets = [];
+    this.props.assets.forEach(function(asset) { 
+      if (this.props.getPrice(asset.symbol)*asset.shares != 0.0) 
+        nonzeroAssets.push(asset)
+    }.bind(this));
+
+    var g = this.svg.selectAll("path").data(this.pie(nonzeroAssets));
+    g.enter().append("path")
+      .style("fill", function() { return this.color(Math.random()*10) }.bind(this));
+    g.attr("d",this.arc);
+  },
+
+  componentDidMount: function() {
+    var width = 250,
+    height = 250,
+    radius = width/2;
+
+    var color = this.color = d3.scale.category10();
+    var arc = this.arc = d3.svg.arc()
+      .outerRadius(radius-10)
+      .innerRadius(0);
+
+    var pie = this.pie = d3.layout.pie()
+      .sort(null)
+      .value(function(d) { 
+        return this.props.getPrice(d.symbol)*d.shares; 
+      }.bind(this));
+
+    var svg = this.svg = d3.select("#chart").append("svg")
+        .attr("width",width)
+        .attr("height",height)
+      .append("g")
+        .attr("transform", "translate(" + width/2 + ", " + height/2 + ")");
+
+    var nonzeroAssets = [];
+    this.props.assets.forEach(function(asset) { 
+      if (this.props.getPrice(asset.symbol) != 0.0) 
+        nonzeroAssets.push(asset)
+    }.bind(this));
+
+    var g = svg.selectAll("path")
+        .data(pie(nonzeroAssets))
+        .enter().append("path")
+          .attr("d", arc)
+          .style("fill", function() { return color(Math.random()*10) })
+  },
+
+  render: function() {
+    return <div id="chart"></div>;
   }
 });
 
@@ -181,6 +238,9 @@ var PortfolioManager = React.createClass({
           <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
           <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
           <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
+        </div>
+        <div className="col-xs-6" >
+          <AssetPieChart getPrice={this.getPrice} assets={this.state.assets}/>
         </div>
       </div>
     );
