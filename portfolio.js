@@ -130,18 +130,23 @@ var RandomColor = function() {
 }
 
 var AssetPieChart = React.createClass({
+  nonzeroAssets: function() {
+    assets = [];
+    this.props.assets.forEach(function(asset) { 
+      if (this.props.getPrice(asset.symbol)*asset.shares > 0) 
+        assets.push(asset)
+    }.bind(this));
+
+    return assets;
+  },
+
   componentDidUpdate: function() {
     this.pie.value(function(d) { 
         return this.props.getPrice(d.symbol)*d.shares;
     }.bind(this));
 
-    var nonzeroAssets = [];
-    this.props.assets.forEach(function(asset) { 
-      if (this.props.getPrice(asset.symbol)*asset.shares != 0.0) 
-        nonzeroAssets.push(asset)
-    }.bind(this));
 
-    var g = this.svg.selectAll("path").data(this.pie(nonzeroAssets));
+    var g = this.svg.selectAll("path").data(this.pie(this.nonzeroAssets()));
     g.enter().append("path")
       .style("fill", function() { return RandomColor() }.bind(this));
     g.exit().remove();
@@ -169,14 +174,8 @@ var AssetPieChart = React.createClass({
       .append("g")
         .attr("transform", "translate(" + width/2 + ", " + height/2 + ")");
 
-    var nonzeroAssets = [];
-    this.props.assets.forEach(function(asset) { 
-      if (this.props.getPrice(asset.symbol) != 0.0) 
-        nonzeroAssets.push(asset)
-    }.bind(this));
-
     var g = svg.selectAll("path")
-        .data(pie(nonzeroAssets))
+        .data(pie(this.nonzeroAssets()))
         .enter().append("path")
           .attr("d", arc)
           .style("fill", function() { return RandomColor(); })
