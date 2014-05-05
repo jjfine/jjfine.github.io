@@ -267,11 +267,7 @@ var MarketAPI = {
 
 };
 
-var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50}, {symbol: "SCHX", shares: 10}, {symbol: "SCHF", shares: 5}];
+var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50, assetClass: "US Small"}, {symbol: "SCHX", shares: 10, assetClass: "US Large"}, {symbol: "SCHF", shares: 5, assetClass: "International Large"}];
 
-var ASSET_CLASSES = { "SCHA": ["small","domestic"]
-                   , "SCHX": ["large","domestic"]
-                   , "SCHF": ["large","foreign"]
-                   , "SCHO": ["bond","domestic"]
-                   };
+
 
