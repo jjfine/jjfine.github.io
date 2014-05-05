@@ -109,6 +109,12 @@ var AssetList = React.createClass({
   }
 });
 
+var colorScale = d3.scale.category20();
+
+var RandomColor = function() {
+  return colorScale(Math.random()*20);
+}
+
 var AssetPieChart = React.createClass({
   componentDidUpdate: function() {
     this.pie.value(function(d) { 
@@ -123,7 +129,7 @@ var AssetPieChart = React.createClass({
 
     var g = this.svg.selectAll("path").data(this.pie(nonzeroAssets));
     g.enter().append("path")
-      .style("fill", function() { return this.color(Math.random()*10) }.bind(this));
+      .style("fill", function() { return RandomColor() }.bind(this));
     g.exit().remove();
     g.attr("d",this.arc);
   },
@@ -133,7 +139,6 @@ var AssetPieChart = React.createClass({
     height = 250,
     radius = width/2;
 
-    var color = this.color = d3.scale.category10();
     var arc = this.arc = d3.svg.arc()
       .outerRadius(radius-10)
       .innerRadius(0);
@@ -160,7 +165,7 @@ var AssetPieChart = React.createClass({
         .data(pie(nonzeroAssets))
         .enter().append("path")
           .attr("d", arc)
-          .style("fill", function() { return color(Math.random()*10) })
+          .style("fill", function() { return RandomColor(); })
   },
 
   render: function() {
