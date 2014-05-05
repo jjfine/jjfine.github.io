@@ -79,13 +79,27 @@ var AssetRow = React.createClass({
     this.props.deleteAsset(this.props.key);
   },
 
+  priceOrLoading: function() {
+    if (this.props.price === -1) {
+      return "Loading..."
+    }
+    return formatDollars(this.props.price)
+  },
+
+  valueOrLoading: function() {
+    if (this.props.price === -1) {
+      return "Loading..."
+    }
+    return formatDollars(this.props.price*this.props.asset.shares)
+  },
+
   render: function() {
     return (
       <tr>
         <td>{this.props.asset.symbol}</td>
         <td><SharesInput changeShares={this.changeShares} shares={this.props.asset.shares} /></td>
-        <td>{formatDollars(this.props.price)}</td>
-        <td>{formatDollars(this.props.price*this.props.asset.shares)}</td>
+        <td>{this.priceOrLoading()}</td>
+        <td>{this.valueOrLoading()}</td>
         <td><AssetClassSelect changeClass={this.changeClass} assetClass={this.props.asset.assetClass} /></td>
         <td><a href="javascript:void(0);" onClick={this.deleteRow}>Delete</a></td>
       </tr>
@@ -222,7 +236,7 @@ var PortfolioManager = React.createClass({
     price = this.state.prices[symbol];
     if (price == undefined) {
       this.updatePrice(symbol);
-      price = 0.0;
+      price = -1;
     }
     return price;
   },
