@@ -64,15 +64,20 @@ var PortfolioManager = React.createClass({
 
   render: function() {
     return (
-      <div className="row">
-        <div className="col-md-6">
-          <AddAssetForm addAsset={this.addAsset} />
-          <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
-          <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
-          <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
+      <div>
+        <div className="row">
+          <div className="col-md-6">
+            <AddAssetForm addAsset={this.addAsset} />
+            <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
+            <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
+            <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
+          </div>
+          <div className="col-xs-6" >
+            <AssetPieChart getPrice={this.getPrice} assets={this.state.assets}/>
+          </div>
         </div>
-        <div className="col-xs-6" >
-          <AssetPieChart getPrice={this.getPrice} assets={this.state.assets}/>
+        <div className="row">
+          <AllocationTable />
         </div>
       </div>
     );
