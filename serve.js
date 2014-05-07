@@ -8,6 +8,7 @@ http.createServer(function(request, response) {
     , filename = path.join(process.cwd(),uri);
   var contentByExtension = {
     '.js': 'text/javascript',
+    '.jsx': 'text/javascript',
     '.css': 'text/css',
     '.html': 'text/html' };
 
