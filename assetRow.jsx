@@ -16,14 +16,14 @@ var AssetRow = React.createClass({
     if (this.props.price === -1) {
       return "Loading..."
     }
-    return formatDollars(this.props.price)
+    return Utils.formatDollars(this.props.price)
   },
 
   valueOrLoading: function() {
     if (this.props.price === -1) {
       return "Loading..."
     }
-    return formatDollars(this.props.price*this.props.asset.shares)
+    return Utils.formatDollars(this.props.price*this.props.asset.shares)
   },
 
   render: function() {
