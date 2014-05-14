@@ -7,14 +7,7 @@ var AllocationTable = React.createClass({
   render: function() {
     var rows = [];
     this.state.allocations.forEach(function(assetClass, index) {
-      var actualAllocation = 0.25;
-      rows.push(
-            <tr>
-              <td>{assetClass.name}</td> 
-              <td>{assetClass.desiredAllocation}</td>
-              <td>{actualAllocation}</td>
-            </tr>
-        );
+      rows.push(<AllocationRow assetClass={assetClass} key={index}/>);
     }.bind(this));
     return (
       <div>
