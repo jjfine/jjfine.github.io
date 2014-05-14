@@ -2,8 +2,7 @@
 var PortfolioManager = React.createClass({
   getInitialState: function() {
     return { 
-      assets: {},
-      prices: {}
+      assets: []
     };
   },
 
@@ -41,25 +40,11 @@ var PortfolioManager = React.createClass({
     } else {
       newAssets = JSON.parse(localStorage['assets']).map(function(x) {return new Asset(x)});
     }
-    this.setState({assets: newAssets});
-  },
+    var portfolio = new Portfolio(newAssets, function() {
+      this.setState({assets: portfolio});
+    }.bind(this));
 
-  getPrice: function(symbol) {
-    price = this.state.prices[symbol];
-    if (price == undefined) {
-      this.updatePrice(symbol);
-      price = -1;
-    }
-    return price;
-  },
-
-  updatePrice: function(symbol) {
-    var portfolio = this;
-    MarketAPI.getAssetInfo(symbol, function() {
-      var price = parseFloat(JSON.parse(this.response).query.results.quote.LastTradePriceOnly);
-      portfolio.state.prices[symbol] = price;
-      portfolio.setState({prices: portfolio.state.prices});
-    });
+    this.setState({assets:portfolio});
   },
 
   render: function() {
@@ -68,12 +53,12 @@ var PortfolioManager = React.createClass({
         <div className="row">
           <div className="col-md-6">
             <AddAssetForm addAsset={this.addAsset} />
-            <AssetList getPrice={this.getPrice} assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
+            <AssetList assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
             <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
             <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
           </div>
           <div className="col-xs-6" >
-            <AssetPieChart getPrice={this.getPrice} assets={this.state.assets}/>
+            <AssetPieChart assets={this.state.assets}/>
           </div>
         </div>
         <div className="row">

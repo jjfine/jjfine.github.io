@@ -2,8 +2,8 @@
 var AssetPieChart = React.createClass({
   nonzeroAssets: function() {
     assets = [];
-    this.props.assets.forEach(function(asset) { 
-      if (this.props.getPrice(asset.symbol)*asset.shares > 0) 
+    this.props.assets.assets.forEach(function(asset) { 
+      if (asset.price*asset.shares > 0) 
         assets.push(asset)
     }.bind(this));
 
@@ -12,7 +12,7 @@ var AssetPieChart = React.createClass({
 
   componentDidUpdate: function() {
     this.pie.value(function(d) { 
-        return this.props.getPrice(d.symbol)*d.shares;
+        return d.price*d.shares;
     }.bind(this));
 
 
@@ -35,7 +35,7 @@ var AssetPieChart = React.createClass({
     var pie = this.pie = d3.layout.pie()
       .sort(null)
       .value(function(d) { 
-        return this.props.getPrice(d.symbol)*d.shares; 
+        return d.price*d.shares; 
       }.bind(this));
 
     var svg = this.svg = d3.select("#chart").append("svg")
