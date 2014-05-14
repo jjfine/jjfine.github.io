@@ -39,7 +39,7 @@ var PortfolioManager = React.createClass({
     if (localStorage['assets'] === undefined) {
       newAssets = SAMPLE_ASSETS;
     } else {
-      newAssets = JSON.parse(localStorage['assets']);
+      newAssets = JSON.parse(localStorage['assets']).map(function(x) {return new Asset(x)});
     }
     this.setState({assets: newAssets});
   },
@@ -85,5 +85,8 @@ var PortfolioManager = React.createClass({
 });
 
 
-var SAMPLE_ASSETS = [{symbol: "SCHA", shares: 50, assetClass: "US Small"}, {symbol: "SCHX", shares: 10, assetClass: "US Large"}, {symbol: "SCHF", shares: 5, assetClass: "International Large"}];
+var SAMPLE_ASSETS = [ new Asset({symbol: "SCHA", shares: 50, assetClass: "US Small"})
+                    , new Asset({symbol: "SCHX", shares: 10, assetClass: "US Large"})
+                    , new Asset({symbol: "SCHF", shares: 5, assetClass: "International Large"})
+                    ];
 
