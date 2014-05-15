@@ -2,12 +2,8 @@
 var PortfolioManager = React.createClass({
   getInitialState: function() {
     return { 
-      assets: []
+      assets: this.getAssetsFromLocalStorage()
     };
-  },
-
-  componentWillMount: function() {
-    this.loadAssetsFromLocalStorage();
   },
 
   addAsset: function(symbol, shares) {
@@ -34,16 +30,19 @@ var PortfolioManager = React.createClass({
     localStorage['assets'] = JSON.stringify(this.state.assets);
   },
 
-  loadAssetsFromLocalStorage: function() {
-    if (localStorage['assets'] === undefined) {
-      newAssets = SAMPLE_ASSETS;
-    } else {
+  getAssetsFromLocalStorage: function() {
+    var newAssets = SAMPLE_ASSETS;
+    if (localStorage['assets'] !== undefined) {
       newAssets = JSON.parse(localStorage['assets']).map(function(x) {return new Asset(x)});
     }
     var portfolio = new Portfolio(newAssets, function() {
       this.setState({assets: portfolio});
     }.bind(this));
+    return portfolio;
+  },
 
+  loadAssetsFromLocalStorage: function() {
+    var newAssets = this.getAssetsFromLocalStorage();
     this.setState({assets:portfolio});
   },
 
