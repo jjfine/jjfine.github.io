@@ -15,6 +15,11 @@ var Portfolio = function(assets, onUpdate) {
     this.onUpdate();
   }
 
+  this.deleteAsset = function(index) {
+    this.assets.splice(index, 1);
+    this.onUpdate();
+  }
+
 }
 
 Portfolio.prototype.fromLocalStorage = function(onUpdate) {

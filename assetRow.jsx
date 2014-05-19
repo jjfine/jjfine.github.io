@@ -9,7 +9,7 @@ var AssetRow = React.createClass({
   },
 
   deleteRow: function() {
-    this.props.deleteAsset(this.props.key);
+    this.props.data.portfolio.deleteAsset(this.props.key);
   },
 
   priceOrLoading: function() {
