@@ -1,11 +1,11 @@
 /** @jsx React.DOM **/
 var AssetRow = React.createClass({
   changeShares:function(shares) {
-    this.props.changeSharesByIndex(this.props.key, shares);
+    this.props.data.portfolio.changeSharesByIndex(this.props.key, shares);
   },
 
   changeClass:function(assetClass) {
-    this.props.changeClassByIndex(this.props.key, assetClass);
+    this.props.data.portfolio.changeClassByIndex(this.props.key, assetClass);
   },
 
   deleteRow: function() {

@@ -20,6 +20,15 @@ var Portfolio = function(assets, onUpdate) {
     this.onUpdate();
   }
 
+  this.changeSharesByIndex = function(index, shares) {
+    this.assets[index].shares = shares; 
+    this.onUpdate();
+  },
+
+  this.changeClassByIndex = function(index, assetClass) {
+    this.assets[index].assetClass = assetClass; 
+    this.onUpdate();
+  }
 }
 
 Portfolio.prototype.fromLocalStorage = function(onUpdate) {
