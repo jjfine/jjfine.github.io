@@ -1,9 +1,20 @@
 var Portfolio = function(assets, onUpdate) {
   this.assets = assets;
+  this.onUpdate = onUpdate;
 
   assets.forEach(function(asset) {
-    asset.updatePrice(onUpdate);
-  });
+    asset.updatePrice(this.onUpdate);
+  }.bind(this));
+
+
+  this.addAsset = function(symbol, shares) {
+    var newAsset = new Asset({symbol: symbol, shares: shares});
+    this.assets = this.assets.concat(newAsset);
+    newAsset.updatePrice(this.onUpdate);
+    
+    this.onUpdate();
+  }
+
 }
 
 Portfolio.prototype.fromLocalStorage = function(onUpdate) {

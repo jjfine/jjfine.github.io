@@ -8,11 +8,6 @@ var PortfolioManager = React.createClass({
     this.forceUpdate();
   },
 
-  addAsset: function(symbol, shares) {
-    var newAssets = this.state.assets.concat({symbol: symbol, shares: shares});
-    this.setState({assets: newAssets});
-  },
-
   deleteAsset: function(index) {
     this.state.assets.splice(index, 1);
     this.setState({assets: this.state.assets});
@@ -27,6 +22,7 @@ var PortfolioManager = React.createClass({
     this.state.assets[index].assetClass = assetClass; 
     this.setState({assets: this.state.assets});
   },
+
 
   saveAssetsToLocalStorage: function() {
     localStorage['assets'] = JSON.stringify(this.state.assets);
@@ -53,7 +49,7 @@ var PortfolioManager = React.createClass({
       <div>
         <div className="row">
           <div className="col-md-6">
-            <AddAssetForm addAsset={this.addAsset} />
+            <AddAssetForm data={data} />
             <AssetList assets={this.props.data.portfolio} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
             <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
             <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>

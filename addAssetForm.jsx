@@ -13,7 +13,7 @@ var AddAssetForm = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
-    this.props.addAsset(this.state.symbol,this.state.shares);
+    this.props.data.portfolio.addAsset(this.state.symbol,this.state.shares);
   },
   
   render: function() {
