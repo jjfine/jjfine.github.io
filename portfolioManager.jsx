@@ -1,9 +1,11 @@
 /** @jsx React.DOM **/
 var PortfolioManager = React.createClass({
-  getInitialState: function() {
-    return { 
-      assets: this.getAssetsFromLocalStorage()
-    };
+  componentWillMount: function() {
+    this.props.data.subscribe(function() {
+      this.forceUpdate();
+    }.bind(this));
+
+    this.forceUpdate();
   },
 
   addAsset: function(symbol, shares) {
@@ -52,12 +54,12 @@ var PortfolioManager = React.createClass({
         <div className="row">
           <div className="col-md-6">
             <AddAssetForm addAsset={this.addAsset} />
-            <AssetList assets={this.state.assets} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
+            <AssetList assets={this.props.data.portfolio} changeSharesByIndex={this.changeSharesByIndex} deleteAsset={this.deleteAsset} changeClassByIndex={this.changeClassByIndex}/>
             <button className="btn btn-default" onClick={this.saveAssetsToLocalStorage}>Save to Local Storage</button>
             <button className="btn btn-default" onClick={this.loadAssetsFromLocalStorage}>Load from Local Storage</button>
           </div>
           <div className="col-xs-6" >
-            <AssetPieChart assets={this.state.assets}/>
+            <AssetPieChart assets={this.props.data.portfolio}/>
           </div>
         </div>
         <div className="row">

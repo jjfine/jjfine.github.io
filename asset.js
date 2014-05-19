@@ -10,6 +10,9 @@ Asset.prototype.updatePrice = function(onUpdate) {
   MarketAPI.getAssetInfo(this.symbol, function() {
     var price = parseFloat(JSON.parse(this.response).query.results.quote.LastTradePriceOnly);
     asset.price = price;
-    if (onUpdate) onUpdate();
+    if (onUpdate) {
+      onUpdate();
+    }
   });
 }
+

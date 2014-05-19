@@ -10,13 +10,17 @@ var Home = React.createClass({
 var HomeTab = {
   name: "Home",
   path: "home",
-  component: <Home />
+  component: function(data) {
+    return <Home />;
+  }
 };
 
 var PortfolioTab = {
   name: "Portfolio",
   path: "portfolio",
-  component: <PortfolioManager />
+  component: function(data) {
+    return <PortfolioManager data={data} />;
+  }
 };
 
 var Tabs = React.createClass({
@@ -49,10 +53,9 @@ var Tabs = React.createClass({
         <ul className="list-inline">
           <li onClick={this.onClick("home")}><h2><a>Home</a></h2></li>
           <li onClick={this.onClick("portfolio")}><h2><a>Portfolio Manager App</a></h2></li>
-          <li><h2>{this.props.data.count}</h2></li>
         </ul>
         <hr />
-        {selectedTab.component}
+        {selectedTab.component(this.props.data)}
       </div>
       );
   }
