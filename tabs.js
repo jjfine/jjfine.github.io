@@ -49,6 +49,7 @@ var Tabs = React.createClass({
         <ul className="list-inline">
           <li onClick={this.onClick("home")}><h2><a>Home</a></h2></li>
           <li onClick={this.onClick("portfolio")}><h2><a>Portfolio Manager App</a></h2></li>
+          <li><h2>{this.props.data.count}</h2></li>
         </ul>
         <hr />
         {selectedTab.component}
@@ -58,12 +59,13 @@ var Tabs = React.createClass({
 });
 
 var path = window.location.pathname;
-var initialTabName = "home"
+var initialTabName = "home";
+var data = new Data();
 
 if (window.location.href.search('portfolio') != -1)
 {
   initialTabName = "portfolio"
 } 
   
-React.renderComponent(<Tabs initialTabName={initialTabName} />, document.body);
+React.renderComponent(<Tabs data={data} initialTabName={initialTabName} />, document.body);
 
